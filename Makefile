@@ -11,7 +11,7 @@ build:
 IMG=qingwave/mycni
 VERSION=v0.1
 docker-build: build
-	docker build -t $(IMG):$(VERSION) .
+	docker build -t $(IMG):$(VERSION) . --progress=plain
 
 deploy:
 	kubectl apply -f deploy/mycni.yaml
@@ -22,7 +22,10 @@ clean:
 	go mod vendor
 
 kind-cluster:
-	kind create cluster --config deploy/kind.yaml
+	kind create cluster --config deploy/kind.yaml -v 5
+
+kind-delete:
+	kind delete cluster --name kind
 
 kind-image-load: docker-build
 	kind load docker-image $(IMG):$(VERSION) 
